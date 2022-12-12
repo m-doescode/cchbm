@@ -1,14 +1,9 @@
 package tech.eglspace.majdstuff.mods.cchbm;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod(
         modid = CCHBMMain.MOD_ID,
@@ -25,6 +20,7 @@ public class CCHBMMain {
     /**
      * This is the instance of your mod as created by Forge. It will never be null.
      */
+    @SuppressWarnings("unused")
     @Mod.Instance(MOD_ID)
     public static CCHBMMain INSTANCE;
 
