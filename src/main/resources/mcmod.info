@@ -1,0 +1,18 @@
+[
+  {
+    "modid": "cchbm",
+    "name": "cchbm",
+    "description": "Adds ComputerCraft (Beta) and HBM: Nuclear Tech Mod compatibility",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://majdstuff.eglspace.tech/cchbm",
+    "updateUrl": "",
+    "authorList": [
+      "Majd123mc"
+    ],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
