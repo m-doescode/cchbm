@@ -31,7 +31,10 @@ public class ReactorControlPeripheral implements IPeripheral {
     @Nonnull
     @Override
     public String[] getMethodNames() {
-        return new String[] {"isOn","setOn","isAuto","setAuto","getCompression","setCompression"};
+        return new String[] {"isOn","setOn","isAuto","setAuto","getCompression","setCompression",
+                "isLinked","getHullHeat","getCoreHeat","getFuel","getWater","getCool", "getSteam",
+                "getMaxWater","getMaxCool","getMaxSteam",
+                "getRods","getMaxRods"};
     }
 
     @Nullable
@@ -41,7 +44,7 @@ public class ReactorControlPeripheral implements IPeripheral {
             // isOn
             case 0: {
                 return context.executeMainThreadTask(() ->
-                    new Object[]{tileEntity.isOn}
+                        new Object[]{tileEntity.isOn}
                 );
             }
             // setOn
@@ -85,8 +88,69 @@ public class ReactorControlPeripheral implements IPeripheral {
                 });
                 return null;
             }
-            default:
-                return null;
+            // isLinked
+            case 6: {
+                return context.executeMainThreadTask(() ->
+                        new Object[]{tileEntity.isLinked}
+                );
+            }
+            default: {
+                if (method >= getMethodNames().length)
+                    return null;
+                int value;
+                switch (method) {
+                    // getHullHeat
+                    case 7:
+                        value = tileEntity.hullHeat;
+                        break;
+                    // getCoreHeat
+                    case 8:
+                        value = tileEntity.coreHeat;
+                        break;
+                    // getFuel
+                    case 9:
+                        value = tileEntity.fuel;
+                        break;
+                    // getWater
+                    case 10:
+                        value = tileEntity.water;
+                        break;
+                    // getCool
+                    case 11:
+                        value = tileEntity.cool;
+                        break;
+                    // getSteam
+                    case 12:
+                        value = tileEntity.steam;
+                        break;
+                    // getMaxWater
+                    case 13:
+                        value = tileEntity.maxWater;
+                        break;
+                    // getMaxCool
+                    case 14:
+                        value = tileEntity.maxCool;
+                        break;
+                    // getMaxSteam
+                    case 15:
+                        value = tileEntity.maxSteam;
+                        break;
+                    // getRods
+                    case 16:
+                        value = tileEntity.rods;
+                        break;
+                    // getMaxRods
+                    case 17:
+                        value = tileEntity.maxRods;
+                        break;
+                    default:
+                        return null;
+                }
+
+                return context.executeMainThreadTask(() ->
+                        new Object[]{value}
+                );
+            }
         }
     }
 
