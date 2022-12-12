@@ -160,7 +160,7 @@ public class ReactorControlPeripheral implements IPeripheral {
     }
 
     @Override
-    public boolean equals(@Nullable IPeripheral iPeripheral) {
-        return false;
+    public boolean equals(@Nullable IPeripheral other) {
+        return other != null && other.getClass() == this.getClass();
     }
 }
