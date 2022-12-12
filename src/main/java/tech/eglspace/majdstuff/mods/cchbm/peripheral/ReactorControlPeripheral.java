@@ -1,11 +1,14 @@
 package tech.eglspace.majdstuff.mods.cchbm.peripheral;
 
+import com.hbm.packet.AuxButtonPacket;
+import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityReactorControl;
 import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.core.apis.ArgumentHelper;
+import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,7 +31,7 @@ public class ReactorControlPeripheral implements IPeripheral {
     @Nonnull
     @Override
     public String[] getMethodNames() {
-        return new String[] {"isOn","setOn","isAuto","setAuto"};
+        return new String[] {"isOn","setOn","isAuto","setAuto","getCompression","setCompression"};
     }
 
     @Nullable
@@ -45,7 +48,7 @@ public class ReactorControlPeripheral implements IPeripheral {
             case 1: {
                 boolean on = ArgumentHelper.getBoolean(arguments, 0);
                 context.issueMainThreadTask(() -> {
-                    //PacketDispatcher.wrapper.sendToServer(new AuxButtonPacket(this.control.getPos().getX(), this.control.getPos().getY(), this.control.getPos().getZ(), this.control.isOn ? 0 : 1, 0));
+                    sendButtonAction(on ? 1 : 0, 0);
                     return null;
                 });
                 return null;
@@ -53,14 +56,31 @@ public class ReactorControlPeripheral implements IPeripheral {
             // isAuto
             case 2: {
                 return context.executeMainThreadTask(() ->
-                    new Object[]{tileEntity.auto}
+                        new Object[]{tileEntity.auto}
                 );
             }
             // setAuto
             case 3: {
                 boolean auto = ArgumentHelper.getBoolean(arguments, 0);
                 context.issueMainThreadTask(() -> {
-                    //PacketDispatcher.wrapper.sendToServer(new AuxButtonPacket(this.control.getPos().getX(), this.control.getPos().getY(), this.control.getPos().getZ(), this.control.isOn ? 0 : 1, 0));
+                    sendButtonAction(auto ? 1 : 0, 1);
+                    return null;
+                });
+                return null;
+            }
+            // getCompression
+            case 4: {
+                return context.executeMainThreadTask(() ->
+                        new Object[]{tileEntity.compression}
+                );
+            }
+            // setCompression
+            case 5: {
+                int compression = ArgumentHelper.getInt(arguments, 0);
+                if (compression < 0 || compression > 2)
+                    throw new LuaException("Compression must be between 0 and 2");
+                context.issueMainThreadTask(() -> {
+                    sendButtonAction(compression, 1);
                     return null;
                 });
                 return null;
@@ -68,6 +88,11 @@ public class ReactorControlPeripheral implements IPeripheral {
             default:
                 return null;
         }
+    }
+
+    private void sendButtonAction(int value, int btnId) {
+        BlockPos pos = tileEntity.getPos();
+        PacketDispatcher.wrapper.sendToServer(new AuxButtonPacket(pos.getX(), pos.getY(), pos.getZ(), value, btnId));
     }
 
     @Override
