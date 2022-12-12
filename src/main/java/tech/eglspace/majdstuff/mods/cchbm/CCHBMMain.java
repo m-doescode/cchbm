@@ -1,9 +1,13 @@
 package tech.eglspace.majdstuff.mods.cchbm;
 
+import com.hbm.tileentity.machine.TileEntityReactorControl;
+import dan200.computercraft.api.ComputerCraftAPI;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import tech.eglspace.majdstuff.mods.cchbm.peripheral.ReactorControlPeripheral;
+import tech.eglspace.majdstuff.mods.cchbm.peripheral.TileEntityPeripheralProvider;
 
 @Mod(
         modid = CCHBMMain.MOD_ID,
@@ -38,7 +42,7 @@ public class CCHBMMain {
      */
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-
+        ComputerCraftAPI.registerPeripheralProvider( new TileEntityPeripheralProvider<>(TileEntityReactorControl.class, ReactorControlPeripheral::new) );
     }
 
     /**
