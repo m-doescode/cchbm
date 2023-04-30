@@ -36,4 +36,5 @@ reactor controllers and launch pads
 
 ## Where can I suggest new features?
 
-< ADD LATER >
+New features can be suggested here: [discussions/features-suggestions-ideas](https://github.com/m-doescode/cchbm/discussions/categories/features-suggestions-ideas)
+<br>Bugs can be reported here: [issues/bug_report](https://github.com/m-doescode/cchbm/issues/new?assignees=m-doescode&labels=bug&template=bug_report.md&title=%5BBUG+REPORT%5D+%3C+Summary+of+bug+%3E)
