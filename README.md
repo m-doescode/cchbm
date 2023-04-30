@@ -34,6 +34,10 @@ reactor controllers and launch pads
 * Check power level
 * [NYI] Get missile id
 
+## Basic Usage
+
+Place a computer next to a launch pad or reactor and use `peripheral.wrap()` with either `"reactor_control"` or `"launchpad"` to use the functions on it.
+
 ## Where can I suggest new features?
 
 New features can be suggested here: [discussions/features-suggestions-ideas](https://github.com/m-doescode/cchbm/discussions/categories/features-suggestions-ideas)
