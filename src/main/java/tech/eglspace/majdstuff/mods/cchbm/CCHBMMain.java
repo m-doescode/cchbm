@@ -7,9 +7,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import tech.eglspace.majdstuff.mods.cchbm.peripheral.HBMPeripheralProvider;
 import tech.eglspace.majdstuff.mods.cchbm.peripheral.LaunchPadPeripheral;
 import tech.eglspace.majdstuff.mods.cchbm.peripheral.ReactorControlPeripheral;
-import tech.eglspace.majdstuff.mods.cchbm.peripheral.TileEntityPeripheralProvider;
 
 @Mod(
         modid = CCHBMMain.MOD_ID,
@@ -44,8 +44,10 @@ public class CCHBMMain {
      */
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        ComputerCraftAPI.registerPeripheralProvider( new TileEntityPeripheralProvider<>(TileEntityReactorControl.class, ReactorControlPeripheral::new) );
-        ComputerCraftAPI.registerPeripheralProvider( new TileEntityPeripheralProvider<>(TileEntityLaunchPad.class, LaunchPadPeripheral::new) );
+        HBMPeripheralProvider peripheralProvider = new HBMPeripheralProvider();
+        peripheralProvider.register(TileEntityReactorControl.class, ReactorControlPeripheral::new);
+        peripheralProvider.register(TileEntityLaunchPad.class, LaunchPadPeripheral::new);
+        ComputerCraftAPI.registerPeripheralProvider(peripheralProvider);
     }
 
     /**
