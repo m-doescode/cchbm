@@ -33,7 +33,7 @@ public class LaunchPadPeripheral implements IPeripheral {
     @Nonnull
     @Override
     public String[] getMethodNames() {
-        return new String[] { "launch", "getDesignatorPos", "setDesignatorPos", "isDesignatorPresent", "power", "maxPower" };
+        return new String[] { "launch", "getDesignatorPos", "setDesignatorPos", "isDesignatorPresent", "power", "maxPower", "isMissilePresent" };
     }
 
     @Nullable
