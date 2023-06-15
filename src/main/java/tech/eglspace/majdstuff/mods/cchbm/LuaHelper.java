@@ -92,8 +92,8 @@ public class LuaHelper {
     // I hate ComputerCraft
     public static Map<Integer, ?> mapify(List<?> objects, boolean startAtZero) {
         Map<Integer, Object> map = new HashMap<>();
-        for (int i = startAtZero ? 0 : 1; startAtZero ? (i < objects.size()) : (i <= objects.size()); i++) {
-            map.put(i, objects.get(i));
+        for (int i = 0; i < objects.size(); i++) {
+            map.put(startAtZero ? i : i + 1, objects.get(i));
         }
         return map;
     }
