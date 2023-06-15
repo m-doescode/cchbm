@@ -50,7 +50,7 @@ public class LuaHelper {
 //        return table;
 //    }
 
-    public static @Nullable Object convertNbtToJava(@Nullable NBTBase nbtValue) {
+    public static @Nullable Object convertNbtToCC(@Nullable NBTBase nbtValue) {
         if (nbtValue == null)
             return null;
         switch (nbtValue.getId()) {
@@ -76,10 +76,10 @@ public class LuaHelper {
             // Compound
             case 10:
                 // This is fucking insane. Straight up.
-                return ((NBTTagCompound)nbtValue).getKeySet().stream().map(key -> new AbstractMap.SimpleEntry<>(key, convertNbtToJava(((NBTTagCompound) nbtValue).getTag(key)))).filter(entry -> entry.getValue() != null).collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
+                return ((NBTTagCompound)nbtValue).getKeySet().stream().map(key -> new AbstractMap.SimpleEntry<>(key, convertNbtToCC(((NBTTagCompound) nbtValue).getTag(key)))).filter(entry -> entry.getValue() != null).collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
             // Int array
             case 11:
-                return mapify(Collections.singletonList(((NBTTagIntArray) nbtValue).getIntArray()));
+                return Arrays.stream(((NBTTagIntArray) nbtValue).getIntArray()).boxed().collect(Collectors.toList());
             // Long array
             case 12:
                 // Long arrays seem not to have any function. They are not supported.
@@ -89,20 +89,16 @@ public class LuaHelper {
         }
     }
 
-    // Fucking stupid ComputerCraft
-    private static Object mapify(Object[] objects) {
+    // I hate ComputerCraft
+    public static Map<Integer, ?> mapify(List<?> objects, boolean startAtZero) {
         Map<Integer, Object> map = new HashMap<>();
-        for (int i = 1; i <= objects.length; i++) {
-            map.put(i, objects[i]);
+        for (int i = startAtZero ? 0 : 1; startAtZero ? (i < objects.size()) : (i <= objects.size()); i++) {
+            map.put(i, objects.get(i));
         }
         return map;
     }
 
-    private static Object mapify(List<Object> objects) {
-        Map<Integer, Object> map = new HashMap<>();
-        for (int i = 1; i <= objects.size(); i++) {
-            map.put(i, objects.get(i));
-        }
-        return map;
+    public static Map<Integer, ?> mapify(List<?> objects) {
+        return mapify(objects, false);
     }
 }
