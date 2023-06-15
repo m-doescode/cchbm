@@ -33,7 +33,7 @@ public class LaunchPadPeripheral implements IPeripheral {
     @Nonnull
     @Override
     public String[] getMethodNames() {
-        return new String[] { "launch", "getDesignatorPos", "setDesignatorPos", "isDesignatorPresent", "power", "maxPower", "isMissilePresent" };
+        return new String[] { "launch", "getDesignatorPos", "setDesignatorPos", "isDesignatorPresent", "isManualDesignator", "power", "maxPower", "isMissilePresent" };
     }
 
     @Nullable
@@ -42,6 +42,10 @@ public class LaunchPadPeripheral implements IPeripheral {
         switch (method) {
             // launch
             case 0: {
+                if (!isMissilePresent())
+                    throw new LuaException("No missile in launch pad");
+                if (!isDesignatorPresent())
+                    throw new LuaException("No designator in launch pad");
                 LaunchPad launchPad = (LaunchPad) com.hbm.blocks.ModBlocks.launch_pad;
                 launchPad.explode(tileEntity.getWorld(), tileEntity.getPos());
                 return null;
@@ -49,8 +53,8 @@ public class LaunchPadPeripheral implements IPeripheral {
             // getDesignatorPos
             case 1: {
                 ItemStack designatorItem = tileEntity.inventory.getStackInSlot(1);
-                if (designatorItem.isEmpty() || !isDesignator(designatorItem.getItem()))
-                    return null;
+                if (!isDesignatorPresent())
+                    throw new LuaException("No designator in launch pad");
 
                 NBTTagCompound tag = designatorItem.getTagCompound();
                 if (tag == null)
@@ -64,8 +68,8 @@ public class LaunchPadPeripheral implements IPeripheral {
                 int zCoord = ArgumentHelper.getInt(arguments, 1);
 
                 ItemStack designatorItem = tileEntity.inventory.getStackInSlot(1);
-                if (designatorItem.isEmpty() || !isDesignator(designatorItem.getItem()))
-                    return null;
+                if (!isManualDesignatorPresent())
+                    throw new LuaException("No manual designator in launch pad");
 
                 NBTTagCompound tag = designatorItem.getTagCompound();
                 if (tag == null)
@@ -78,21 +82,23 @@ public class LaunchPadPeripheral implements IPeripheral {
             }
             // isDesignatorPresent
             case 3: {
-                ItemStack item = tileEntity.inventory.getStackInSlot(1);
-                return new Object[] { !item.isEmpty() && isDesignator(item.getItem()) };
+                return new Object[] { isDesignatorPresent() };
+            }
+            // isManualDesignator
+            case 4: {
+                return new Object[] { isManualDesignatorPresent() };
             }
             // getPower
-            case 4: {
+            case 5: {
                 return new Object[] { tileEntity.power };
             }
             // getMaxPower
-            case 5: {
+            case 6: {
                 return new Object[] { tileEntity.maxPower };
             }
             // isMissilePresent
-            case 6: {
-                ItemStack item = tileEntity.inventory.getStackInSlot(0);
-                return new Object[] { !item.isEmpty() && isMissile(item.getItem()) };
+            case 7: {
+                return new Object[] { isMissilePresent() };
             }
             default:
                 return null;
@@ -103,10 +109,25 @@ public class LaunchPadPeripheral implements IPeripheral {
         return item instanceof ItemDesignator || item instanceof ItemDesignatorManual || item instanceof ItemDesignatorRange;
     }
 
+    private boolean isDesignatorPresent() {
+        ItemStack item = tileEntity.inventory.getStackInSlot(1);
+        return !item.isEmpty() && isDesignator(item.getItem());
+    }
+
+    private boolean isManualDesignatorPresent() {
+        ItemStack item = tileEntity.inventory.getStackInSlot(1);
+        return !item.isEmpty() && item.getItem() instanceof ItemDesignatorManual;
+    }
+
     // Very hacky solution, but there unfortunately is no other way.
     @SuppressWarnings({"ConstantConditions"})
     private static boolean isMissile(Item item) {
         return item != com.hbm.items.ModItems.missile_assembly && item.getRegistryName().getPath().startsWith("missile_");
+    }
+
+    private boolean isMissilePresent() {
+        ItemStack item = tileEntity.inventory.getStackInSlot(0);
+        return !item.isEmpty() && isMissile(item.getItem());
     }
 
     @Override
