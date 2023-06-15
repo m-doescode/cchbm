@@ -7,9 +7,12 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.core.apis.ArgumentHelper;
 import net.minecraft.nbt.NBTTagCompound;
+import tech.eglspace.majdstuff.mods.cchbm.LuaHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Locale;
+import java.util.Map;
 
 public class RBMKConsolePeripheral implements IPeripheral {
 
@@ -28,7 +31,7 @@ public class RBMKConsolePeripheral implements IPeripheral {
     @Nonnull
     @Override
     public String[] getMethodNames() {
-        return new String[] { "setRods" };
+        return new String[] { "setRods", "getColumnInfo"};
     }
 
     @Nullable
@@ -61,6 +64,38 @@ public class RBMKConsolePeripheral implements IPeripheral {
                 tileEntity.receiveControl(controlPacket);
 
                 return null;
+            }
+            // getColumnInfo
+            case 1: {
+                // 1 Arg mode: column by index
+                // 2 Arg mode: column by position (x, z)
+
+                int x = ArgumentHelper.getInt(arguments, 0);
+                int z = ArgumentHelper.optInt(arguments, 1, -1);
+
+                // Argument checking
+                if (z == -1) {
+                    if (x < 0 || x > 255)
+                        throw new LuaException("Index argument must be between 0 and 255");
+                } else {
+                    if (x < 0 || x > 15)
+                        throw new LuaException("X argument must be between 0 and 15");
+                    if (z < 0 || z > 15)
+                        throw new LuaException("Z argument must be between 0 and 15");
+                }
+
+                TileEntityRBMKConsole.RBMKColumn columnObject;
+                if (z == -1) columnObject = tileEntity.columns[x];
+                else columnObject = tileEntity.columns[x + z * 15];
+
+                if (columnObject == null)
+                    return null;
+
+                @SuppressWarnings("unchecked") Map<String, Object> infoTable = (Map<String, Object>) LuaHelper.convertNbtToJava(columnObject.data);
+                //noinspection DataFlowIssue
+                infoTable.put("columnType", columnObject.type.name().toLowerCase(Locale.ROOT));
+
+                return new Object[] { infoTable };
             }
             default:
                 return null;
