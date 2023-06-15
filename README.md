@@ -43,7 +43,7 @@ reactor controllers and launch pads
 
 Place a computer next to a launch pad or reactor and use `peripheral.wrap()` with either `"reactor_control"` or `"launchpad"` to use the functions on it.
 
-Peripheral API documentation can be found here: [docs/peripherals](docs/peripherals).
+Peripheral API documentation can be found here: [docs/peripherals](/docs/peripherals).
 
 ## Where can I suggest new features?
 
