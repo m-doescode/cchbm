@@ -2,6 +2,7 @@ package tech.eglspace.majdstuff.mods.cchbm;
 
 import com.hbm.tileentity.bomb.TileEntityLaunchPad;
 import com.hbm.tileentity.machine.TileEntityReactorControl;
+import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole;
 import dan200.computercraft.api.ComputerCraftAPI;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -9,6 +10,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import tech.eglspace.majdstuff.mods.cchbm.peripheral.HBMPeripheralProvider;
 import tech.eglspace.majdstuff.mods.cchbm.peripheral.LaunchPadPeripheral;
+import tech.eglspace.majdstuff.mods.cchbm.peripheral.RBMKConsolePeripheral;
 import tech.eglspace.majdstuff.mods.cchbm.peripheral.ReactorControlPeripheral;
 
 @Mod(
@@ -47,6 +49,7 @@ public class CCHBMMain {
         HBMPeripheralProvider peripheralProvider = new HBMPeripheralProvider();
         peripheralProvider.register(TileEntityReactorControl.class, ReactorControlPeripheral::new);
         peripheralProvider.register(TileEntityLaunchPad.class, LaunchPadPeripheral::new);
+        peripheralProvider.register(TileEntityRBMKConsole.class, RBMKConsolePeripheral::new);
         ComputerCraftAPI.registerPeripheralProvider(peripheralProvider);
     }
 
