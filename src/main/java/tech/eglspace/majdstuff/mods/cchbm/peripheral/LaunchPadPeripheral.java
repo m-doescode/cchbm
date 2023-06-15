@@ -73,6 +73,8 @@ public class LaunchPadPeripheral implements IPeripheral {
 
                 tag.setInteger("xCoord", xCoord);
                 tag.setInteger("zCoord", zCoord);
+
+                return null;
             }
             // isDesignatorPresent
             case 3: {
