@@ -34,9 +34,16 @@ reactor controllers and launch pads
 * Check power level
 * [NYI] Get missile id
 
+### RBMK Console
+
+* Query information about specific column
+* Raise/lower (set percentage) a specific column's rods, a specific group of rods, or all rods
+
 ## Basic Usage
 
 Place a computer next to a launch pad or reactor and use `peripheral.wrap()` with either `"reactor_control"` or `"launchpad"` to use the functions on it.
+
+Peripheral API documentation can be found here: [docs/peripherals](docs/peripherals).
 
 ## Where can I suggest new features?
 
