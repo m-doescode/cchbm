@@ -30,7 +30,7 @@ public class RBMKConsolePeripheral implements IPeripheral {
     @Nonnull
     @Override
     public String[] getMethodNames() {
-        return new String[] { "setRods", "setRod", "getColumnInfo", "getAllColumnInfo" };
+        return new String[] { "setRods", "setRod", "getColumnInfo" };
     }
 
     @Nullable
@@ -70,20 +70,21 @@ public class RBMKConsolePeripheral implements IPeripheral {
                 // 2 Arg mode: column by position (x, z)
 
                 double level = ArgumentHelper.getNumber(arguments, 0);
-                int index = getIndexFromPosition(arguments);
+                int index = getIndexFromPosition(arguments, 1);
 
                 NBTTagCompound controlPacket = new NBTTagCompound();
                 controlPacket.setDouble("level", level);
                 controlPacket.setInteger("sel_" + index, index);
 
                 tileEntity.receiveControl(controlPacket);
+                return null;
             }
             // getColumnInfo
             case 2: {
                 // 1 Arg mode: column by index
                 // 2 Arg mode: column by position (x, z)
 
-                int index = getIndexFromPosition(arguments);
+                int index = getIndexFromPosition(arguments, 0);
                 TileEntityRBMKConsole.RBMKColumn columnObject = tileEntity.columns[index];
 
                 if (columnObject == null)
@@ -96,55 +97,6 @@ public class RBMKConsolePeripheral implements IPeripheral {
 
                 return new Object[] { infoTable };
             }
-            // getAllColumnInfo
-            case 3: {
-                // Modes:
-                // "index" (default) - [1 - 256] map by index of all columns
-                // "index0" - [0 - 255] map by index of all columns
-                // "pos" - (x, y) [1 - 16][1 - 16] map by position of all columns
-                // "pos0" - (x, y) [0 - 15][0 - 15] map by position of all columns
-
-                String mode = ArgumentHelper.optString(arguments, 0, "index");
-
-                boolean startZero = false;
-
-                switch (mode) {
-                    case "index0":
-                        startZero = true;
-                    case "index":
-                        List<Map<String, ?>> columnInfo = new ArrayList<>();
-
-                        for (int col = 0; col < tileEntity.columns.length; col++) {
-                            TileEntityRBMKConsole.RBMKColumn colObj = tileEntity.columns[col];
-                            if (colObj == null)
-                                continue;
-                            //noinspection unchecked
-                            columnInfo.add((Map<String, ?>) LuaHelper.convertNbtToCC(colObj.data));
-                        }
-
-                        return new Object[] { LuaHelper.mapify(columnInfo, startZero) };
-                    case "pos0":
-                        startZero = true;
-                    case "pos":
-                        Map<Integer, Map<Integer, Map<String, ?>>> columnMap = new HashMap<>();
-
-                        for (int x = 0; x <= 15; x++) {
-                            Map<Integer, Map<String, ?>> xMap = new HashMap<>();
-                            columnMap.put(startZero ? x : x + 1, xMap);
-                            for (int z = 0; z <= 15; z++) {
-                                int col = x + z * 15;
-
-                                TileEntityRBMKConsole.RBMKColumn colObj = tileEntity.columns[col];
-                                if (colObj == null)
-                                    continue;
-                                //noinspection unchecked
-                                xMap.put(startZero ? z : z + 1, (Map<String, ?>) LuaHelper.convertNbtToCC(colObj.data));
-                            }
-                        }
-                    default:
-                        throw new LuaException("Unexpected mode. Must be one of: 'index', 'index0', 'pos', 'pos0'");
-                }
-            }
             default:
                 return null;
         }
@@ -154,9 +106,9 @@ public class RBMKConsolePeripheral implements IPeripheral {
         return other != null && other.getClass() == this.getClass();
     }
 
-    private static int getIndexFromPosition(Object[] arguments) throws LuaException {
-        int x = ArgumentHelper.getInt(arguments, 0);
-        int z = ArgumentHelper.optInt(arguments, 1, -1);
+    private static int getIndexFromPosition(Object[] arguments, int startArgumentIndex) throws LuaException {
+        int x = ArgumentHelper.getInt(arguments, startArgumentIndex);
+        int z = ArgumentHelper.optInt(arguments, startArgumentIndex + 1, -1);
 
         // Argument checking
         if (z == -1) {
