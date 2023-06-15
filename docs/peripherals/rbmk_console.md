@@ -44,7 +44,7 @@ Here is a list of keys that can be found for each RBMK column type:
 |RBMK Column Type (column id)|Keys|
 |--|--|
 |All|- `columnType`: The id of the column.<br />- `heat`: The column temperature (in °C) |
-|Control (`control`)|- `color`: (May be nil) The color id of the control rod (see above).<br />-`level`: The level of the control rod|
+|Control (`control`)|- `color`: (May be nil) The color id of the control rod (see above).<br />- `level`: The level of the control rod|
 |Automatic Control (`control_auto`)|- `level`: The level of the control rod|
 |Boiler (`boiler`)|- `water`: The level of water in the boiler<br />- `steam`: The level of steam in the boiler<br />- `maxWater` The maximum level of water in the boiler<br />- `maxSteam` The maximum level of steam in the boiler<br />- `type`: The compression level of steam in the boiler. May be one of `steam`, `hotsteam`, `superhotsteam`, `ultrahotsteam`|
 |Fuel rod (`fuel`, `fuel_sim`)|- `enrichment`: The 'durability' of the fuel rod. Inverse of the depletion amount.<br />- `xenon`: The level of xenon poisoning in the reactor.<br />- `coreTemp`: The core temperature (in °C) of the column.<br />- `skinTemp`: The skin temperature (in °C) of the column.|
