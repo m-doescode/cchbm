@@ -17,7 +17,7 @@ import tech.eglspace.majdstuff.mods.cchbm.peripheral.ReactorControlPeripheral;
         modid = CCHBMMain.MOD_ID,
         name = CCHBMMain.MOD_NAME,
         version = CCHBMMain.VERSION,
-        dependencies = "required-after:computercraft@[1.80pr1];required-after:hbm@[hbm-1.8.1A-Gv3,)"
+        dependencies = "required-after:computercraft;required-after:hbm@[hbm-1.8.1A-Gv3,)"
 )
 public class CCHBMMain {
 
